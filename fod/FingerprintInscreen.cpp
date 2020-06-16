@@ -22,6 +22,8 @@
 #include <fstream>
 #include <cmath>
 
+#include <hardware_legacy/power.h>
+
 #define FINGERPRINT_ERROR_VENDOR 8
 
 #define COMMAND_NIT 10
@@ -40,12 +42,15 @@
 #define FOD_SENSOR_Y 1356
 #define FOD_SENSOR_SIZE 134
 
+#define HBM_OFF_DELAY 50
+#define HBM_ON_DELAY 250
+
 namespace vendor {
 namespace lineage {
 namespace biometrics {
 namespace fingerprint {
 namespace inscreen {
-namespace V1_0 {
+namespace V1_1 {
 namespace implementation {
 
 template <typename T>
@@ -55,6 +60,7 @@ static void set(const std::string& path, const T& value) {
 }
 
 FingerprintInscreen::FingerprintInscreen() {
+    xiaomiDisplayFeatureService = IDisplayFeature::getService();
     xiaomiFingerprintService = IXiaomiFingerprint::getService();
 }
 
@@ -78,14 +84,37 @@ Return<void> FingerprintInscreen::onFinishEnroll() {
     return Void();
 }
 
+Return<int32_t> FingerprintInscreen::getHbmOffDelay() {
+    return HBM_OFF_DELAY;
+}
+
+Return<int32_t> FingerprintInscreen::getHbmOnDelay() {
+    return HBM_ON_DELAY;
+}
+
+Return<bool> FingerprintInscreen::supportsAlwaysOnHBM() {
+    return true;
+}
+
+Return<void> FingerprintInscreen::switchHbm(bool enabled) {
+    if (enabled) {
+        xiaomiDisplayFeatureService->setFeature(0, 11, 1, 3);
+    } else {
+        xiaomiDisplayFeatureService->setFeature(0, 11, 0, 3);
+    }
+    return Void();
+}
+
 Return<void> FingerprintInscreen::onPress() {
-    set(DISPPARAM_PATH, DISPPARAM_HBM_FOD_ON);
+    //set(DISPPARAM_PATH, DISPPARAM_HBM_FOD_ON);
+    acquire_wake_lock(PARTIAL_WAKE_LOCK, LOG_TAG);
     xiaomiFingerprintService->extCmd(COMMAND_NIT, PARAM_NIT_630_FOD);
     return Void();
 }
 
 Return<void> FingerprintInscreen::onRelease() {
-    set(DISPPARAM_PATH, DISPPARAM_HBM_FOD_OFF);
+    //set(DISPPARAM_PATH, DISPPARAM_HBM_FOD_OFF);
+    release_wake_lock(LOG_TAG);
     xiaomiFingerprintService->extCmd(COMMAND_NIT, PARAM_NIT_NONE);
     return Void();
 }
@@ -136,7 +165,7 @@ Return<void> FingerprintInscreen::setCallback(const sp<IFingerprintInscreenCallb
 }
 
 }  // namespace implementation
-}  // namespace V1_0
+}  // namespace V1_1
 }  // namespace inscreen
 }  // namespace fingerprint
 }  // namespace biometrics
