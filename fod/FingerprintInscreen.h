@@ -19,6 +19,7 @@
 
 #include <vendor/lineage/biometrics/fingerprint/inscreen/1.1/IFingerprintInscreen.h>
 #include <vendor/xiaomi/hardware/fingerprintextension/1.0/IXiaomiFingerprint.h>
+#include <vendor/xiaomi/hardware/displayfeature/1.0/IDisplayFeature.h>
 
 namespace vendor {
 namespace lineage {
@@ -33,6 +34,7 @@ using ::android::hardware::Return;
 using ::android::hardware::Void;
 using ::vendor::xiaomi::hardware::fingerprintextension::V1_0::IXiaomiFingerprint;
 using V1_0::IFingerprintInscreenCallback;
+using ::vendor::xiaomi::hardware::displayfeature::V1_0::IDisplayFeature;
 
 class FingerprintInscreen : public IFingerprintInscreen {
 public:
