@@ -33,7 +33,7 @@ EVO_SUPPORT_URL := https://t.me/EvolutionXA3
 CUSTOM_BUILD_TYPE := OFFICIAL
 EVO_DONATE_URL := https://www.paypal.me/hdsrivastava
 
-BUILD_FINGERPRINT := "google/coral/coral:10/QQ3A.200605.001/6392402:user/release-keys"
+BUILD_FINGERPRINT := "google/coral/coral:10/QQ3A.200805.001/6578210:user/release-keys"
 
 PRODUCT_BUILD_PROP_OVERRIDES += \
     PRIVATE_BUILD_DESC="laurel_sprout-user 10 QKQ1.190910.002 V11.0.15.0.QFQMIXM release-keys" \
